@@ -27,30 +27,31 @@ class App:
     self.tempdir = tempfile.mkdtemp(prefix="virtual_stem_player-")
 
     # Defining Elements
-    self.pause = Button(self.root, command=self.pause_and_play, state=DISABLED)
-    self.vocals = Scale(self.root, from_=100, to=0, command=self.update_vocals)
-    self.drums = Scale(self.root, from_=100, to=0, orient=HORIZONTAL, command=self.update_drums)
-    self.bass = Scale(self.root, from_=0, to=100, orient=HORIZONTAL, command=self.update_bass)
-    self.other = Scale(self.root, from_=0, to=100, command=self.update_other)
-    self.song_button = Button(self.root, text="Select Song",  command=self.select_song)
+    self.pause = ttk.Button(self.root, command=self.pause_and_play, state=DISABLED)
+    self.vocals = ttk.Scale(self.root, from_=100, to=0, orient=VERTICAL, command=self.update_vocals)
+    self.drums = ttk.Scale(self.root, from_=100, to=0, orient=HORIZONTAL, command=self.update_drums)
+    self.bass = ttk.Scale(self.root, from_=0, to=100, orient=HORIZONTAL, command=self.update_bass)
+    self.other = ttk.Scale(self.root, from_=0, to=100, orient=VERTICAL, command=self.update_other)
+    self.song_button = ttk.Button(self.root, text="Select Song",  command=self.select_song)
 
     # Setting sliders to 100%
     stems = [self.vocals, self.drums, self.bass, self.other]
     for stem in stems:
       stem.set(100)
 
-    center_x = 110
+    center_x = 140
+    center_y = 135
 
     # Top Mid
     self.vocals.place(x=center_x, y=10)  
     # Mid Left
-    self.drums.place(x=10, y=120)
+    self.drums.place(x=10, y=center_y)
     #Mid Right
-    self.bass.place(x=190, y=120)
+    self.bass.place(x=190, y=center_y)
     #Bottom Mid
     self.other.place(x=center_x,y=180)
 
-    self.pause.place(x=center_x + 25,y=130,height=30, width=30)
+    self.pause.place(x=center_x - 5, y=center_y - 5,height=30, width=30)
     self.song_button.place(x=10, y=10)
 
     self.root.title("Virtual Stem Player")
