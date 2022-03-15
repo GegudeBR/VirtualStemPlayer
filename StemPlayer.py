@@ -1,6 +1,8 @@
 import os
 import vlc
 from tkinter import *
+import tkinter as tk
+from tkinter import ttk
 from tkinter.messagebox import showinfo
 from tkinter import filedialog as fd
 import tempfile
@@ -10,24 +12,31 @@ from spleeter.separator import Separator
 class App:
 
   def __init__(self):
+    self.root = Tk()
+
+    # Applying Themes
+    self.root.tk.call('source', 'libs/forest-dark.tcl')
+    ttk.Style().theme_use('forest-dark')
+
+
+    # Defining variables
     self.is_playing = False
     self.song_loaded = False
     self.vocals_mp3, self.drums_mp3, self.bass_mp3, self.other_mp3 = None, None, None, None
     self.song_path = None
     self.tempdir = tempfile.mkdtemp(prefix="virtual_stem_player-")
 
-    self.root = Tk()
+    # Defining Elements
     self.pause = Button(self.root, command=self.pause_and_play, state=DISABLED)
     self.vocals = Scale(self.root, from_=100, to=0, command=self.update_vocals)
     self.drums = Scale(self.root, from_=100, to=0, orient=HORIZONTAL, command=self.update_drums)
     self.bass = Scale(self.root, from_=0, to=100, orient=HORIZONTAL, command=self.update_bass)
     self.other = Scale(self.root, from_=0, to=100, command=self.update_other)
-
     self.song_button = Button(self.root, text="Select Song",  command=self.select_song)
 
-    allStems = [self.vocals, self.drums, self.bass, self.other]
-
-    for stem in allStems:
+    # Setting sliders to 100%
+    stems = [self.vocals, self.drums, self.bass, self.other]
+    for stem in stems:
       stem.set(100)
 
     center_x = 110
@@ -63,7 +72,7 @@ class App:
       self.other_mp3.audio_set_volume(self.other.get()) 
 
   def setup(self):
-    
+  
     cut = Separator('spleeter:4stems')
     split_path = self.song_path.split("/")
     song_name = split_path[len(split_path)-1].replace(".mp3", "")
@@ -91,7 +100,6 @@ class App:
     self.song_loaded = False
     self.pause['state'] = DISABLED
     self.song_path = fd.askopenfilename(title='Choose a song',initialdir='/', filetypes=[("Mp3 Files", "*.mp3")])
-    print(self.song_path)
     '''
     showinfo(
       title='Selected Song',
