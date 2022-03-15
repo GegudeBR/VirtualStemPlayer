@@ -23,6 +23,7 @@ class App:
     self.is_playing = False
     self.song_loaded = False
     self.vocals_mp3, self.drums_mp3, self.bass_mp3, self.other_mp3 = None, None, None, None
+    self.previous_vocals = 0
     self.song_path = None
     self.tempdir = tempfile.mkdtemp(prefix="virtual_stem_player-")
 
@@ -54,23 +55,36 @@ class App:
     self.pause.place(x=center_x - 5, y=center_y - 5,height=30, width=30)
     self.song_button.place(x=10, y=10)
 
+    # Binds
+    self.root.bind('m', self.mute_vocals)
+
+
     self.root.title("Virtual Stem Player")
     self.root.geometry("300x300")
     self.root.resizable(False, False)
     self.root.mainloop()
 
+
+  def mute_vocals(self, event):
+    if int(self.vocals.get()) > 0:
+      self.previous_vocals = int(self.vocals.get())
+      self.vocals.set(0)
+    else: 
+      self.vocals.set(self.previous_vocals)
+      
   def update_vocals(self, event):
     if self.vocals_mp3 != None:
-      self.vocals_mp3.audio_set_volume(self.vocals.get()) 
+      self.vocals_mp3.audio_set_volume(int(self.vocals.get())) 
+
   def update_drums(self, event):
     if self.drums_mp3 != None:
-      self.drums_mp3.audio_set_volume(self.drums.get()) 
+      self.drums_mp3.audio_set_volume(int(self.drums.get()))  
   def update_bass(self, event):
     if self.bass_mp3 != None:
-      self.bass_mp3.audio_set_volume(self.bass.get()) 
+      self.bass_mp3.audio_set_volume(int(self.bass.get())) 
   def update_other(self, event):
     if self.other_mp3 != None:
-      self.other_mp3.audio_set_volume(self.other.get()) 
+      self.other_mp3.audio_set_volume(int(self.other.get())) 
 
   def setup(self):
   
@@ -94,7 +108,7 @@ class App:
 
     showinfo(
       title='Success',
-      message='Music Loaded'
+      message='Music loaded!'
     )
 
   def select_song(self):
