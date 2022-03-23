@@ -1,5 +1,6 @@
 import os
 import vlc
+import time
 from tkinter import *
 import tkinter as tk
 from tkinter import ttk
@@ -13,7 +14,8 @@ class App:
 
   def __init__(self):
     self.root = Tk()
-
+    self.keep_updating = True
+    self.update_media = True
     # Applying Themes
     self.root.tk.call('source', 'libs/forest-dark.tcl')
     ttk.Style().theme_use('forest-dark')
@@ -58,28 +60,39 @@ class App:
 
     # Binds
     self.root.bind('m', self.mute_vocals)
+    self.media_time.bind('<ButtonRelease-1>', self.move_media)
+    self.media_time.bind('<ButtonPress-1>', self.cancel_move_media)
 
 
     self.root.title("Virtual Stem Player")
     self.root.geometry("300x300")
     self.root.resizable(False, False)
-    while(1):
-      if self.vocals_mp3 != None:
+
+    self.root.protocol("WM_DELETE_WINDOW", self.refresh_update)
+    while(self.keep_updating):
+      if self.vocals_mp3 != None and self.update_media == True:
         if self.media_time['to'] != (self.vocals_mp3.get_length() / 1000):
           self.media_time['to'] = self.vocals_mp3.get_length() / 1000
         #print(self.vocals_mp3.get_time() / 1000)
         self.media_time.set(self.vocals_mp3.get_time() / 1000)
       self.root.update_idletasks()
       self.root.update()
+      time.sleep(0.01)
+
+
+  def cancel_move_media(self, event):
+    self.update_media = False
 
   def move_media(self, event):
     if self.vocals_mp3 != None:
       stems = [self.vocals_mp3, self.drums_mp3, self.bass_mp3, self.other_mp3]
       for stem in stems:
         stem.set_time(int(self.media_time.get() * 1000))
+    self.update_media = True
 
   def set_max_stems(self):
     stems = [self.vocals, self.drums, self.bass, self.other]
+    self.previous_vocals = 0
     for stem in stems:
       stem.set(100)
 
@@ -105,19 +118,19 @@ class App:
       self.other_mp3.audio_set_volume(int(self.other.get())) 
 
   def setup(self):
-    #cut = Separator('spleeter:4stems')
-    #split_path = self.song_path.split("/")
-    #song_name = split_path[len(split_path)-1].replace(".mp3", "")
+    cut = Separator('spleeter:4stems')
+    split_path = self.song_path.split("/")
+    song_name = split_path[len(split_path)-1].replace(".mp3", "")
 
     showinfo(
       title='Loading',
       message='Loading music, wait for success window.'
     )
 
-    #generated_path = self.tempdir + "/" + song_name
-    generated_path = "/Users/hallaig/Desktop/Happier_Than_ever"
-    #if not (os.path.exists(generated_path)):
-    #  cut.separate_to_file(self.song_path, self.tempdir, codec='mp3');
+    generated_path = self.tempdir + "/" + song_name
+    if not (os.path.exists(generated_path)):
+      cut.separate_to_file(self.song_path, self.tempdir, codec='mp3', bitrate="320k");
+    #generated_path = "/Users/hallaig/Desktop/Happier_Than_ever"
     self.vocals_mp3 = vlc.MediaPlayer(generated_path + "/vocals.mp3")
     self.drums_mp3 = vlc.MediaPlayer(generated_path + "/drums.mp3")
     self.bass_mp3 = vlc.MediaPlayer(generated_path + "/bass.mp3")
@@ -146,6 +159,8 @@ class App:
     if ".mp3" in self.song_path:
       self.setup()
     
+  def refresh_update(self):
+    self.keep_updating = False
 
   def pause_and_play(self):
     if not self.song_loaded:
@@ -169,3 +184,4 @@ class App:
 
 if __name__ == "__main__":
   app=App()
+  
