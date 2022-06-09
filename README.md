@@ -1,5 +1,9 @@
 # VirtualStemPlayer
 
+### Description
+
+Split music into stems providing a way listen to music in a different way, with just some elements of a song.
+
 ### Requirements
 
 - Python >= 3.6 and <= 3.9
@@ -19,6 +23,8 @@ pip install spleeter
 ## Usage
 
 ![UI Image](images/UI.png)
+
+(First use will take some time to first initialize, since it needs to download pre_trained modules)
 
 1. Click on "Select Song"
 2. Wait for confirmation dialog
