@@ -7,12 +7,14 @@ Split music into stems providing a way listen to music in a different way, with 
 ### Requirements
 
 - Python >= 3.6 and <= 3.9
-- Tkinter
+- Python-VLC 
 - Spleeter
+- Tkinter
 
 ```
-pip install tk
+pip install python-vlc
 pip install spleeter
+pip install tk
 ```
 
 ### Tkinter themes
