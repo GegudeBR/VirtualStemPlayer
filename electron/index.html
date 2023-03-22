@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+    <title>STEM Player</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="index.js" defer></script>
+</head>
+<body>
+  <div class="stem-player">
+    <div class="stem-controls">
+      <div class="slider-container">
+        <div class="slider-row">
+          <div class="slider">
+            <div class="volume-bar"></div>
+            <input type="range" class="volume-slider" min="0" max="100" value="50">
+          </div>
+          <div class="slider">
+            <div class="volume-bar"></div>
+            <input type="range" class="volume-slider" min="0" max="100" value="50">
+          </div>
+        </div>
+        <div class="slider-row">
+          <div class="slider">
+            <div class="volume-bar"></div>
+            <input type="range" class="volume-slider" min="0" max="100" value="50">
+          </div>
+          <div class="slider">
+            <div class="volume-bar"></div>
+            <input type="range" class="volume-slider" min="0" max="100" value="50">
+          </div>
+        </div>
+      </div>
+      <div class="music-time">
+        <div class="music-time-bar"></div>
+        <input type="range" class="music-time-slider" min="0" max="100" value="0">
+      </div>
+      <div class="play-pause">
+        <button class="play-pause-btn"></button>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
