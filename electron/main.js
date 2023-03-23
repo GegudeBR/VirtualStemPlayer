@@ -4,7 +4,7 @@ const path = require('path')
 const createWindow = () => {
   const win = new BrowserWindow({
     width: 400,
-    height: 300,
+    height: 350,
     resizable: false, // prevents the window from being resized
     scrollBounce: false, // prevents the window from being scrolled
     webPreferences: {
