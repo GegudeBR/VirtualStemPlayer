@@ -1,10 +1,14 @@
-window.addEventListener('DOMContentLoaded', () => {
-  const replaceText = (selector, text) => {
-    const element = document.getElementById(selector)
-    if (element) element.innerText = text
-  }
+// preload.js
+const { contextBridge, ipcRenderer } = require('electron');
 
-  for (const dependency of ['chrome', 'node', 'electron']) {
-    replaceText(`${dependency}-version`, process.versions[dependency])
-  }
-})
+// Expose the ipcRenderer object to the renderer process
+console.log('ipcRenderer: ', ipcRenderer)
+contextBridge.exposeInMainWorld('ipcRenderer', ipcRenderer);
+
+// Expose a custom require function that exposes the Node.js require function
+contextBridge.exposeInMainWorld('myRequire', {
+  require: (moduleName) => require(moduleName),
+});
+
+
+console.log('preload.js loaded');

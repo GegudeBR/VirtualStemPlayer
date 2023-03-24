@@ -1,44 +1,31 @@
-const { spawn } = require('child_process');
 
 let vocals = new Audio('audio/vocals.mp3');
 let other = new Audio('audio/other.mp3');
 let drums = new Audio('audio/drums.mp3');
 let bass = new Audio('audio/bass.mp3');
 
-let allowPlay = true;
+let allowPlay = false;
 
-const fileInput = document.getElementById("song-file");
-fileInput.addEventListener('change', function (event) {
-  const selectedFile = event.target.files[0];
+const fileInput = document.getElementById('song-file');
+fileInput.addEventListener('change', () => {
+  // Get the selected file
+  const selectedFile = fileInput.files[0];
+  // Get the file path
   const filePath = selectedFile.path;
-  const pythonProcess = spawn('python', ["./python/main.py", filePath]);
-  alert("Please wait while the file is being processed. This may take a few minutes.")
+  // Send the file path to the main process
+  window.ipcRenderer.send('process-file', filePath);
+  alert('File is being processed. Please wait...');
 
-  pythonProcess.stdout.on('exit', (data) => {
+  // Listen for the 'processed-file' response from the main process
+  window.ipcRenderer.on('processed-file', (event, data) => {
     if (data === 0) {
-      allowPlay = true;
-      vocals = new Audio('audio/vocals.mp3');
-      other = new Audio('audio/other.mp3');
-      drums = new Audio('audio/drums.mp3');
-      bass = new Audio('audio/bass.mp3');
-    } else if (data == 1) {
-      alert('The file you selected is not a valid.');
-    } 
-    else if (data == 2) {
-      alert('The file you selected is not a valid audio file.');
+      alert('The file you selected has been processed successfully.');
+    } else {
+      alert('An error has occurred while processing the file.');
     }
-    else {
-      alert('An unknown error has occurred.');
-    }
-  }); 
-
-  // Monitor the progress of the python process
-  pythonProcess.stdout.on('data', (data) => {
-    console.log(data.toString());
   });
 
 });
-
 
 const playButton = document.querySelector('.stem-player button');
 
